@@ -11,7 +11,7 @@ public class Block
     public long TimeStamp { get; set; }
     public byte[] PreviousHash { get; set; }
     public byte[] Hash { get; set; }
-    public Transaction[] Transactions { get; set; }
+    public List<Transaction> Transactions { get; set; }
 
     public Block(int height, byte[] previousHash, List<Transaction> transactions)
     {
@@ -19,7 +19,7 @@ public class Block
         TimeStamp = DateTime.Now.Ticks;
         PreviousHash = previousHash;
         Hash = GenerateHash();
-        Transactions = transactions.ToArray();
+        Transactions = transactions;
     }
 
     private byte[] GenerateHash()
@@ -29,7 +29,7 @@ public class Block
 
         var transactionHash = SerializeObjects(Transactions);
 
-        byte[] headerBytes = new byte[timeStamp.Length + PreviousHash.Length + transactionHash.length];
+        byte[] headerBytes = new byte[timeStamp.Length + PreviousHash.Length + transactionHash.Length];
 
         Buffer.BlockCopy(timeStamp, 0, headerBytes, 0, timeStamp.Length);
         Buffer.BlockCopy(PreviousHash, 0, headerBytes, timeStamp.Length, PreviousHash.Length);
@@ -43,7 +43,6 @@ public class Block
     public byte[] SerializeObjects(List<Transaction> t)
     {
         string json = JsonSerializer.Serialize(t);
-        return Encoding.UTF8.GetBytes(json);
+        return System.Text.Encoding.UTF8.GetBytes(json);
     }
-
 }
