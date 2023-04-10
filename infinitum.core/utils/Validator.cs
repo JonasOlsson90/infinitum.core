@@ -4,8 +4,27 @@ using System.Security.Cryptography;
 
 public class Validator
 {
-    public bool ValidateBlock(Block b)
+
+    // impossible to validate transactions because locally stored blockchains make if impossible to verify that the sender actually has the amount they send.
+    // this is an inheret flaw in Infinitum but that is OK because only cool people will use Infinitum so that will never happen.
+
+    public bool ValidateBlock(Block b, Block? prevB)
     {
+        if (prevB == null)
+        {
+            if(b.Height != 0 || b.Transactions[0].Amount != 1000 || b.Transactions[0].Sender != null)
+            {
+                return false;
+            }
+        }
+        else
+        {
+            if(b.Height != prevB.Height+1 || b.PreviousHash != prevB.Hash)
+            {
+                return false;
+            }
+        }
+
         return true;
     }
 
