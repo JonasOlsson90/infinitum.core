@@ -1,4 +1,7 @@
 ﻿using System.Security.Cryptography;
+using System;
+using System.Collections.Generic;
+using System.Text.Json;
 
 namespace infinitum.core;
 
@@ -24,7 +27,7 @@ public class Block
         var sha = SHA256.Create();
         byte[] timeStamp = BitConverter.GetBytes(TimeStamp);
 
-        var transactionHash = Transactions.ConvertToByte();
+        var transactionHash = SerializeObjects(Transactions);
 
         byte[] headerBytes = new byte[timeStamp.Length + PreviousHash.Length + transactionHash.length];
 
@@ -36,4 +39,11 @@ public class Block
 
         return hash;
     }
+
+    public byte[] SerializeObjects(List<Transaction> t)
+    {
+        string json = JsonSerializer.Serialize(t);
+        return Encoding.UTF8.GetBytes(json);
+    }
+
 }
