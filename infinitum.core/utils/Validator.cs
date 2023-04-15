@@ -30,6 +30,17 @@ public class Validator
 
     public bool ValidateBlockchain(List<Block> c)
     {
+        for(int i=0; i<c.Count; i++)
+        {
+            if (i>0)
+            {
+                if(!ValidateBlock(c[i], c[i-1]))
+                {
+                    return false;
+                }
+            }
+        }
+
         return true;
     }
 
