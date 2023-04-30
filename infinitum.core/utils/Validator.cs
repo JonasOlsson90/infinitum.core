@@ -5,21 +5,21 @@ using System.Security.Cryptography;
 public class Validator
 {
 
-    // impossible to validate transactions because locally stored blockchains make if impossible to verify that the sender actually has the amount they send.
-    // this is an inheret flaw in Infinitum but that is OK because only cool people will use Infinitum so that will never happen.
+    // impossible to validate transactions because locally stored blockchains make it impossible to verify that the sender actually has the amount they send.
+    // this is an inherent flaw in Infinitum but that is OK because only cool people will use Infinitum so that will never happen.
 
     public bool ValidateBlock(Block b, Block? prevB)
     {
         if (prevB == null)
         {
-            if(b.Height != 0 || b.Transactions[0].Amount != 1000 || b.Transactions[0].Sender != null)
+            if (b.Height != 0 || b.Transactions[0].Amount != 1000 || b.Transactions[0].Sender != null)
             {
                 return false;
             }
         }
         else
         {
-            if(b.Height != prevB.Height+1 || b.PreviousHash != prevB.Hash)
+            if (b.Height != prevB.Height + 1 || b.PreviousHash != prevB.Hash)
             {
                 return false;
             }
@@ -30,14 +30,11 @@ public class Validator
 
     public bool ValidateBlockchain(List<Block> c)
     {
-        for(int i=0; i<c.Count; i++)
+        for (int i = 1; i < c.Count; i++)
         {
-            if (i>0)
+            if (!ValidateBlock(c[i], c[i - 1]))
             {
-                if(!ValidateBlock(c[i], c[i-1]))
-                {
-                    return false;
-                }
+                return false;
             }
         }
 
@@ -51,5 +48,5 @@ public class Validator
         string str = System.Text.Encoding.UTF8.GetString(hash, 0, hash.Length);
         return String.Equals(publicKey, str);
     }
-    
+
 }
