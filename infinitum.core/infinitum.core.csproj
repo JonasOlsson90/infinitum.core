@@ -4,6 +4,13 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Version>0.0.1</Version>
+    <Description>The core tools and features of infinitum.</Description>
+    <Title>infinitum.core</Title>
+    <PackageProjectUrl></PackageProjectUrl>
+    <RepositoryUrl>https://github.com/JonasOlsson90/infinitum.core</RepositoryUrl>
+    <PackageReleaseNotes>Basic functionality still under development</PackageReleaseNotes>
   </PropertyGroup>
 
 </Project>
