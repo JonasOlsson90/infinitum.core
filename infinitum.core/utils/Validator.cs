@@ -2,13 +2,13 @@ namespace infinitum.core.Utils;
 using System.Security.Cryptography;
 
 
-public class Validator
+public static class Validator
 {
 
     // impossible to validate transactions because locally stored blockchains make it impossible to verify that the sender actually has the amount they send.
     // this is an inherent flaw in Infinitum but that is OK because only cool people will use Infinitum so that will never happen.
 
-    public bool ValidateBlock(Block b, Block? prevB)
+    private static bool ValidateBlock(Block b, Block? prevB)
     {
         if (prevB == null)
         {
@@ -19,7 +19,7 @@ public class Validator
         }
         else
         {
-            if (b.Height != prevB.Height + 1 || b.PreviousHash != prevB.Hash)
+            if (b.Height != prevB.Height + 1 || !b.PreviousHash.SequenceEqual(prevB.Hash))
             {
                 return false;
             }
@@ -28,20 +28,21 @@ public class Validator
         return true;
     }
 
-    public bool ValidateBlockchain(List<Block> c)
+    public static bool ValidateBlockchain(List<Block> c)
     {
+        if (!ValidateBlock(c[0], null))
+            return false;
+
         for (int i = 1; i < c.Count; i++)
         {
             if (!ValidateBlock(c[i], c[i - 1]))
-            {
                 return false;
-            }
         }
 
         return true;
     }
 
-    public bool ValidatePublicKey(string privateKey, string publicKey)
+    public static bool ValidatePublicKey(string privateKey, string publicKey)
     {
         var sha = SHA256.Create();
         byte[] hash = sha.ComputeHash(System.Text.Encoding.ASCII.GetBytes(privateKey));
