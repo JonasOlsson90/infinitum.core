@@ -18,8 +18,8 @@ public class Block
         Height = height;
         TimeStamp = DateTime.Now.Ticks;
         PreviousHash = previousHash;
-        Hash = GenerateHash();
         Transactions = transactions;
+        Hash = GenerateHash();
     }
 
     private byte[] GenerateHash()
