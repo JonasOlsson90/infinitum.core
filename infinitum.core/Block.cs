@@ -18,8 +18,8 @@ public class Block
         Height = height;
         TimeStamp = DateTime.Now.Ticks;
         PreviousHash = previousHash;
-        Hash = GenerateHash();
         Transactions = transactions;
+        Hash = GenerateHash();
     }
 
     private byte[] GenerateHash()
@@ -40,7 +40,7 @@ public class Block
         return hash;
     }
 
-    private byte[] SerializeObjects(List<Transaction> t)
+    public static byte[] SerializeObjects(List<Transaction> t)
     {
         string json = JsonSerializer.Serialize(t);
         return System.Text.Encoding.UTF8.GetBytes(json);
