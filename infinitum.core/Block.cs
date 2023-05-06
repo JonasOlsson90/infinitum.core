@@ -1,6 +1,4 @@
 ﻿using System.Security.Cryptography;
-using System;
-using System.Collections.Generic;
 using System.Text.Json;
 
 namespace infinitum.core;
@@ -22,7 +20,7 @@ public class Block
         Hash = GenerateHash();
     }
 
-    private byte[] GenerateHash()
+    public byte[] GenerateHash()
     {
         var sha = SHA256.Create();
         byte[] timeStamp = BitConverter.GetBytes(TimeStamp);

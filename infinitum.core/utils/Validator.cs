@@ -1,6 +1,5 @@
 namespace infinitum.core.Utils;
 using System.Security.Cryptography;
-using System.Transactions;
 
 
 public static class Validator
@@ -8,25 +7,7 @@ public static class Validator
 
     // impossible to validate transactions because locally stored blockchains make it impossible to verify that the sender actually has the amount they send.
     // this is an inherent flaw in Infinitum but that is OK because only cool people will use Infinitum so that will never happen.
-
-    private static bool ValidateHash(Block block)
-    {
-        var sha = SHA256.Create();
-        byte[] timeStamp = BitConverter.GetBytes(block.TimeStamp);
-
-        var transactionHash = Block.SerializeObjects(block.Transactions);
-
-        byte[] headerBytes = new byte[timeStamp.Length + block.PreviousHash.Length + transactionHash.Length];
-
-        Buffer.BlockCopy(timeStamp, 0, headerBytes, 0, timeStamp.Length);
-        Buffer.BlockCopy(block.PreviousHash, 0, headerBytes, timeStamp.Length, block.PreviousHash.Length);
-        Buffer.BlockCopy(transactionHash, 0, headerBytes, timeStamp.Length + block.PreviousHash.Length, transactionHash.Length);
-
-        byte[] hash = sha.ComputeHash(headerBytes);
-
-        return hash.SequenceEqual(block.Hash);
-    }
-
+    
     private static bool ValidateBlock(Block b, Block? prevB)
     {
         if (prevB == null)
@@ -44,7 +25,7 @@ public static class Validator
             }
         }
 
-        return ValidateHash(b);
+        return b.Hash.SequenceEqual(b.GenerateHash());
     }
 
     public static bool ValidateBlockchain(List<Block> c)
