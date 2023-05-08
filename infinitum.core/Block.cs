@@ -1,5 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+using infinitum.core.Utils;
 
 namespace infinitum.core;
 
@@ -7,7 +9,9 @@ public class Block
 {
     public int Height { get; set; }
     public long TimeStamp { get; set; }
+    [JsonConverter(typeof(ByteArrayJsonConverter))]
     public byte[] PreviousHash { get; set; }
+    [JsonConverter(typeof(ByteArrayJsonConverter))]
     public byte[] Hash { get; set; }
     public List<Transaction> Transactions { get; set; }
 
@@ -38,7 +42,7 @@ public class Block
         return hash;
     }
 
-    public static byte[] SerializeObjects(List<Transaction> t)
+    private static byte[] SerializeObjects(List<Transaction> t)
     {
         string json = JsonSerializer.Serialize(t);
         return System.Text.Encoding.UTF8.GetBytes(json);
