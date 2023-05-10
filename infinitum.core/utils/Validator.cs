@@ -8,34 +8,34 @@ public static class Validator
     // impossible to validate transactions because locally stored blockchains make it impossible to verify that the sender actually has the amount they send.
     // this is an inherent flaw in Infinitum but that is OK because only cool people will use Infinitum so that will never happen.
     
-    private static bool ValidateBlock(Block b, Block? prevB)
+    private static bool ValidateBlock(Block block, Block? prevBlock)
     {
-        if (prevB == null)
+        if (prevBlock == null)
         {
-            if (b.Height != 0 || b.Transactions[0].Amount != 1000 || b.Transactions[0].Sender != null)
+            if (block.Height != 0 || block.Transactions[0].Amount != 1000 || block.Transactions[0].Sender != null)
             {
                 return false;
             }
         }
         else
         {
-            if (b.Height != prevB.Height + 1 || !b.PreviousHash.SequenceEqual(prevB.Hash))
+            if (block.Height != prevBlock.Height + 1 || !block.PreviousHash.SequenceEqual(prevBlock.Hash))
             {
                 return false;
             }
         }
 
-        return b.Hash.SequenceEqual(b.GenerateHash());
+        return block.Hash.SequenceEqual(block.GenerateHash());
     }
 
-    public static bool ValidateBlockchain(List<Block> c)
+    public static bool ValidateBlockchain(List<Block> blockchain)
     {
-        if (!ValidateBlock(c[0], null))
+        if (!ValidateBlock(blockchain[0], null))
             return false;
 
-        for (int i = 1; i < c.Count; i++)
+        for (var i = 1; i < blockchain.Count; i++)
         {
-            if (!ValidateBlock(c[i], c[i - 1]))
+            if (!ValidateBlock(blockchain[i], blockchain[i - 1]))
                 return false;
         }
 
@@ -45,9 +45,8 @@ public static class Validator
     public static bool ValidatePublicKey(string privateKey, string publicKey)
     {
         var sha = SHA256.Create();
-        byte[] hash = sha.ComputeHash(System.Text.Encoding.ASCII.GetBytes(privateKey));
-        string str = System.Text.Encoding.UTF8.GetString(hash, 0, hash.Length);
-        return String.Equals(publicKey, str);
+        var hash = sha.ComputeHash(System.Text.Encoding.ASCII.GetBytes(privateKey));
+        var str = System.Text.Encoding.UTF8.GetString(hash, 0, hash.Length);
+        return string.Equals(publicKey, str);
     }
-
 }

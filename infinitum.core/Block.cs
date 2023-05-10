@@ -26,25 +26,24 @@ public class Block
 
     public byte[] GenerateHash()
     {
-        var sha = SHA256.Create();
-        byte[] timeStamp = BitConverter.GetBytes(TimeStamp);
+        var timeStamp = BitConverter.GetBytes(TimeStamp);
 
         var transactionHash = SerializeObjects(Transactions);
 
-        byte[] headerBytes = new byte[timeStamp.Length + PreviousHash.Length + transactionHash.Length];
+        var headerBytes = new byte[timeStamp.Length + PreviousHash.Length + transactionHash.Length];
 
         Buffer.BlockCopy(timeStamp, 0, headerBytes, 0, timeStamp.Length);
         Buffer.BlockCopy(PreviousHash, 0, headerBytes, timeStamp.Length, PreviousHash.Length);
         Buffer.BlockCopy(transactionHash, 0, headerBytes, timeStamp.Length + PreviousHash.Length, transactionHash.Length);
 
-        byte[] hash = sha.ComputeHash(headerBytes);
+        var hash = SHA256.HashData(headerBytes);
 
         return hash;
     }
 
     private static byte[] SerializeObjects(List<Transaction> t)
     {
-        string json = JsonSerializer.Serialize(t);
+        var json = JsonSerializer.Serialize(t);
         return System.Text.Encoding.UTF8.GetBytes(json);
     }
 }
